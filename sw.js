@@ -1,4 +1,4 @@
-const CACHE_NAME = 'puen-phet-plus-v2';
+const CACHE_NAME = 'puen-phet-plus-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const ASSETS_TO_CACHE = [
   './js/nutrients.js',
   './js/moa.js',
   './js/calculator.js',
+  './js/wheels.js',
   './js/app.js',
   './manifest.json'
 ];

@@ -20,6 +20,9 @@ const App = (function () {
     NutrientsModule.init();
     MoaModule.init();
     CalculatorModule.init();
+    if (typeof WheelsModule !== 'undefined') {
+      WheelsModule.init();
+    }
 
     // Track local visit counter
     trackVisits();
@@ -54,6 +57,25 @@ const App = (function () {
     if (menuBtn) menuBtn.addEventListener('click', openMobileSidebar);
     if (closeBtn) closeBtn.addEventListener('click', closeMobileSidebar);
     if (backdrop) backdrop.addEventListener('click', closeMobileSidebar);
+
+    // Sub-Tool Tab Switcher (Tank Mix, Chemical Wheel, Rice LCC)
+    document.querySelectorAll('[data-subtool]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.subtool;
+        document.querySelectorAll('[data-subtool]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.querySelectorAll('.subtool-panel').forEach(panel => {
+          if (panel.id === targetId) {
+            panel.style.display = 'block';
+            panel.classList.add('active');
+          } else {
+            panel.style.display = 'none';
+            panel.classList.remove('active');
+          }
+        });
+      });
+    });
 
     // Close modal on backdrop click or Escape
     const modal = document.getElementById('detail-modal');
@@ -194,7 +216,13 @@ const App = (function () {
 
   return {
     init,
-    navigateToView
+    navigateToView,
+    openSubTool: function(subtoolId) {
+      navigateToView('toolbox-view');
+      setTimeout(() => {
+        document.querySelector(`[data-subtool="${subtoolId}"]`)?.click();
+      }, 50);
+    }
   };
 })();
 

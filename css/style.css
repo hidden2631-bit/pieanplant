@@ -1113,6 +1113,233 @@ a:hover {
   }
 }
 
+/* ==========================================================================
+   Interactive Agro-Wheels Styles (Chemical Mix & Leaf Color Chart)
+   ========================================================================== */
+
+/* Sub-Tool Navigation Pills */
+.tool-tab-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  background: var(--bg-card);
+  padding: 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.tool-tab-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.tool-tab-btn:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.tool-tab-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Chemical Mixing Wheel */
+.mix-wheel-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.mix-wheel-wrapper {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+}
+
+.mix-wheel-dial {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  border: 8px solid var(--bg-card-subtle);
+  box-shadow: var(--shadow-md), inset 0 0 12px rgba(0, 0, 0, 0.06);
+  position: relative;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: conic-gradient(
+    #3498db 0deg 60deg,
+    #e67e22 60deg 120deg,
+    #9b59b6 120deg 180deg,
+    #2ecc71 180deg 240deg,
+    #f1c40f 240deg 300deg,
+    #1abc9c 300deg 360deg
+  );
+}
+
+.mix-wheel-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130px;
+  height: 130px;
+  background: var(--bg-card);
+  border-radius: var(--radius-full);
+  border: 4px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  z-index: 5;
+  text-align: center;
+}
+
+.mix-pointer {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 18px solid var(--danger);
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.mix-step-selector-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.mix-step-pill {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.mix-step-pill:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.mix-step-pill.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+/* Leaf Color Chart (LCC) Styles */
+.lcc-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.lcc-swatches-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.lcc-swatch-btn {
+  border: 2px solid var(--border-color);
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lcc-swatch-btn:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.lcc-swatch-btn.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  transform: translateY(-4px);
+  box-shadow: 0 0 0 3px rgba(18, 99, 61, 0.2);
+}
+
+.lcc-color-bar {
+  width: 100%;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.lcc-num {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.lcc-slider-wrap {
+  margin: 16px 0 24px;
+  padding: 16px;
+  background: var(--bg-card-subtle);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.lcc-range-slider {
+  width: 100%;
+  height: 8px;
+  border-radius: var(--radius-full);
+  outline: none;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+@media (max-width: 800px) {
+  .mix-wheel-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .lcc-swatches-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  
+  .lcc-color-bar {
+    height: 60px;
+  }
+}
+
 /* Print Stylesheet for Pocket Cheat Sheet */
 @media print {
   .sidebar, .top-header, .bottom-nav, .tag-bar, .search-bar-inline, .photo-upload-box, .tool-btn {

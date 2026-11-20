@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,350;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/style.css?v=4">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
 </head>
@@ -56,10 +56,7 @@
 
     <div class="sidebar-footer">
       <b style="color:var(--text-main); display:block; margin-bottom:4px;">แหล่งอ้างอิงและเครือข่าย:</b>
-      <p style="margin-bottom:8px; font-size:0.78rem;">สำนักงานเกษตรอำเภอบางกระทุ่ม · กรมส่งเสริมการเกษตร · กรมวิชาการเกษตร</p>
-      <a href="https://www.facebook.com/plant.Bangkrathum" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:6px; font-size:0.8rem; font-weight:700; color:var(--info);">
-        <span>📘</span> เพจงานอารักขาพืชบางกระทุ่ม
-      </a>
+      <p style="margin-bottom:8px; font-size:0.78rem;">สำนักงานเกษตรอำเภอโพนทอง จ.ร้อยเอ็ด กรมส่งเสริมการเกษตร และกรมวิชาการเกษตร</p>
     </div>
   </aside>
 
@@ -188,10 +185,22 @@
             <div style="margin-top:14px; font-weight:700; color:var(--primary); font-size:0.88rem;">เปิดคลังกลุ่มสาร ➔</div>
           </div>
 
-          <div class="card" style="cursor:pointer;" onclick="App.navigateToView('toolbox-view')">
+          <div class="card" style="cursor:pointer;" onclick="App.openSubTool('subtool-calculator')">
             <div class="card-title"><span>🧮</span> เครื่องคำนวณตวงสาร & บันทึกการพ่น</div>
             <p class="card-subtitle">คำนวณปริมาณสารเคมีต่อน้ำในถังพ่น (16L, 20L, 200L) พร้อมสมุดบันทึกประวัติป้องกันพ่นซ้ำ</p>
             <div style="margin-top:14px; font-weight:700; color:var(--primary); font-size:0.88rem;">เปิดเครื่องคำนวณ ➔</div>
+          </div>
+
+          <div class="card" style="cursor:pointer;" onclick="App.openSubTool('subtool-mix-wheel')">
+            <div class="card-title"><span>🎡</span> วงล้อผสมสารเคมี WALES & ความเข้ากันได้</div>
+            <p class="card-subtitle">หมุนวงล้อดู 6 ลำดับการเทสารลงถังพ่น พร้อมระบบตรวจสาร 2 ชนิดว่าผสมกันได้หรือห้ามผสม</p>
+            <div style="margin-top:14px; font-weight:700; color:var(--primary); font-size:0.88rem;">หมุนวงล้อผสมสาร ➔</div>
+          </div>
+
+          <div class="card" style="cursor:pointer;" onclick="App.openSubTool('subtool-lcc-wheel')">
+            <div class="card-title"><span>🌾</span> วงล้อเทียบสีใบข้าว LCC (ปุ๋ยไนโตรเจน)</div>
+            <p class="card-subtitle">แผ่นเทียบสีใบข้าว 5 ระดับตามมาตรฐาน IRRI ประเมินอัตราปุ๋ยยูเรียและเตือนโรคไหม้ข้าว</p>
+            <div style="margin-top:14px; font-weight:700; color:var(--primary); font-size:0.88rem;">เปิดวงล้อเทียบสีใบข้าว ➔</div>
           </div>
         </div>
       </section>
@@ -347,90 +356,240 @@
 
       <!-- ================= VIEW 5: TOOLBOX ================= -->
       <section class="view-section" id="toolbox-view">
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <h2 class="card-title"><span>🧮</span> เครื่องคำนวณอัตราผสมสารเคมี (Tank Mix Calculator)</h2>
-              <p class="card-subtitle">คำนวณปริมาณสารเคมี (ซีซีหรือกรัม) ที่ต้องตวงจริงให้ตรงกับขนาดถังพ่น</p>
+        <!-- Sub-Tool Navigation Pills -->
+        <div class="tool-tab-nav" role="tablist">
+          <button type="button" class="tool-tab-btn active" data-subtool="subtool-calculator">
+            <span>🧮</span> เครื่องคำนวณถังพ่น & บันทึก
+          </button>
+          <button type="button" class="tool-tab-btn" data-subtool="subtool-mix-wheel">
+            <span>🎡</span> วงล้อผสมสารเคมี & ความเข้ากันได้
+          </button>
+          <button type="button" class="tool-tab-btn" data-subtool="subtool-lcc-wheel">
+            <span>🌾</span> วงล้อเทียบสีใบข้าว (LCC)
+          </button>
+        </div>
+
+        <!-- SUBTOOL 1: Tank Mix Calculator -->
+        <div class="subtool-panel active" id="subtool-calculator">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title"><span>🧮</span> เครื่องคำนวณอัตราผสมสารเคมี (Tank Mix Calculator)</h2>
+                <p class="card-subtitle">คำนวณปริมาณสารเคมี (ซีซีหรือกรัม) ที่ต้องตวงจริงให้ตรงกับขนาดถังพ่น</p>
+              </div>
+            </div>
+
+            <div class="calc-grid">
+              <div class="calc-input-group">
+                <label for="calc-tank-select">ขนาดถังฉีดพ่น:</label>
+                <select id="calc-tank-select">
+                  <option value="20" selected>ถังโยก/แบตเตอรี่สะพายหลัง (20 ลิตร)</option>
+                  <option value="16">เป้สะพายหลังขนาดเล็ก (16 ลิตร)</option>
+                  <option value="200">ถังน้ำมัน 200 ลิตร (สายยางลาก)</option>
+                  <option value="1000">ถังใหญ่/แอร์บัส/โดรนเกษตร (1,000 ลิตร)</option>
+                  <option value="custom">กำหนดขนาดถังเอง (ลิตร)...</option>
+                </select>
+                <input type="number" id="calc-custom-tank" placeholder="ระบุขนาดถัง (ลิตร)" style="display:none; margin-top:6px;" value="20">
+              </div>
+
+              <div class="calc-input-group">
+                <label for="calc-dose-input">อัตราการใช้ข้างฉลาก (ต่อน้ำ 20 ลิตร):</label>
+                <input type="number" id="calc-dose-input" value="20" min="0.1" step="0.5">
+              </div>
+
+              <div class="calc-input-group">
+                <label for="calc-unit-select">หน่วยของสารเคมี:</label>
+                <select id="calc-unit-select">
+                  <option value="ซีซี (มล.)">ซีซี หรือ มิลลิลิตร (มล.) — สารน้ำ</option>
+                  <option value="กรัม">กรัม — สารผง / เม็ด</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Calculation Result Display -->
+            <div class="calc-result-banner">
+              <div style="font-size:0.95rem; opacity:0.9;">ปริมาณสารเคมีที่ต้องตวงใส่ถังพ่น:</div>
+              <div class="calc-result-number" id="calc-result-display">20</div>
+              <div style="font-size:1.1rem; font-weight:700;" id="calc-result-unit">ซีซี (มล.)</div>
+              <p style="font-size:0.86rem; margin-top:10px; opacity:0.88;" id="calc-area-estimate">
+                น้ำ 20 ลิตร ฉีดพ่นได้ประมาณ 0.3 ไร่ (คิดจากอัตราพ่นเฉลี่ย 60 ลิตร/ไร่)
+              </p>
             </div>
           </div>
 
-          <div class="calc-grid">
-            <div class="calc-input-group">
-              <label for="calc-tank-select">ขนาดถังฉีดพ่น:</label>
-              <select id="calc-tank-select">
-                <option value="20" selected>ถังโยก/แบตเตอรี่สะพายหลัง (20 ลิตร)</option>
-                <option value="16">เป้สะพายหลังขนาดเล็ก (16 ลิตร)</option>
-                <option value="200">ถังน้ำมัน 200 ลิตร (สายยางลาก)</option>
-                <option value="1000">ถังใหญ่/แอร์บัส/โดรนเกษตร (1,000 ลิตร)</option>
-                <option value="custom">กำหนดขนาดถังเอง (ลิตร)...</option>
-              </select>
-              <input type="number" id="calc-custom-tank" placeholder="ระบุขนาดถัง (ลิตร)" style="display:none; margin-top:6px;" value="20">
+          <!-- Farm Spraying Diary Logger -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title"><span>📒</span> สมุดบันทึกประวัติการฉีดพ่นในแปลง (Spray Diary)</h3>
+                <p class="card-subtitle">บันทึกกลุ่มสารที่พ่นไปล่าสุด เพื่อติดตามรอบและป้องกันการใช้กลุ่มสารเดิมซ้ำ</p>
+              </div>
             </div>
 
-            <div class="calc-input-group">
-              <label for="calc-dose-input">อัตราการใช้ข้างฉลาก (ต่อน้ำ 20 ลิตร):</label>
-              <input type="number" id="calc-dose-input" value="20" min="0.1" step="0.5">
+            <div class="calc-grid" style="margin-bottom:12px;">
+              <div class="calc-input-group">
+                <label for="diary-crop-name">ชนิดพืช / แปลง:</label>
+                <input type="text" id="diary-crop-name" placeholder="เช่น ทุเรียน แปลงที่ 1">
+              </div>
+              <div class="calc-input-group">
+                <label for="diary-pest-name">ศัตรูพืชเป้าหมาย:</label>
+                <input type="text" id="diary-pest-name" placeholder="เช่น เพลี้ยไก่แจ้ หรือ รากเน่าโคนเน่า">
+              </div>
+              <div class="calc-input-group">
+                <label for="diary-group-code">กลุ่มสาร FRAC / IRAC ที่ใช้:</label>
+                <input type="text" id="diary-group-code" placeholder="เช่น IRAC 4A (อิมิดาโคลพริด)">
+              </div>
             </div>
 
-            <div class="calc-input-group">
-              <label for="calc-unit-select">หน่วยของสารเคมี:</label>
-              <select id="calc-unit-select">
-                <option value="ซีซี (มล.)">ซีซี หรือ มิลลิลิตร (มล.) — สารน้ำ</option>
-                <option value="กรัม">กรัม — สารผง / เม็ด</option>
-              </select>
+            <div class="calc-input-group" style="margin-bottom:14px;">
+              <label for="diary-notes">หมายเหตุเพิ่มเติม:</label>
+              <input type="text" id="diary-notes" placeholder="เช่น พ่นช่วงเช้า อัตรา 20 ซีซี สภาพอากาศแจ่มใส">
             </div>
-          </div>
 
-          <!-- Calculation Result Display -->
-          <div class="calc-result-banner">
-            <div style="font-size:0.95rem; opacity:0.9;">ปริมาณสารเคมีที่ต้องตวงใส่ถังพ่น:</div>
-            <div class="calc-result-number" id="calc-result-display">20</div>
-            <div style="font-size:1.1rem; font-weight:700;" id="calc-result-unit">ซีซี (มล.)</div>
-            <p style="font-size:0.86rem; margin-top:10px; opacity:0.88;" id="calc-area-estimate">
-              น้ำ 20 ลิตร ฉีดพ่นได้ประมาณ 0.3 ไร่ (คิดจากอัตราพ่นเฉลี่ย 60 ลิตร/ไร่)
-            </p>
+            <button type="button" class="btn-primary" id="save-diary-btn">
+              💾 บันทึกประวัติการฉีดพ่น
+            </button>
+
+            <div style="margin-top:20px;">
+              <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:10px; color:var(--text-main);">
+                รายการที่บันทึกล่าสุดในเครื่องนี้:
+              </h4>
+              <div id="diary-entries-container"></div>
+            </div>
           </div>
         </div>
 
-        <!-- Farm Spraying Diary Logger -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <h3 class="card-title"><span>📒</span> สมุดบันทึกประวัติการฉีดพ่นในแปลง (Spray Diary)</h3>
-              <p class="card-subtitle">บันทึกกลุ่มสารที่พ่นไปล่าสุด เพื่อติดตามรอบและป้องกันการใช้กลุ่มสารเดิมซ้ำ</p>
+        <!-- SUBTOOL 2: Chemical Mix Wheel & Compatibility -->
+        <div class="subtool-panel" id="subtool-mix-wheel" style="display:none;">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title"><span>🎡</span> วงล้อลำดับการผสมสารเคมีลงถังพ่น (WALES Mixing Sequence)</h2>
+                <p class="card-subtitle">หมุนหรือแตะเลือกขั้นตอน 1 - 6 เพื่อดูวิธีการเทสารเคมีลงถังอย่างถูกต้อง ป้องกันสารจับตัวเป็นก้อนหรือเสื่อมฤทธิ์</p>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button type="button" class="tool-btn" id="mix-prev-btn">⬅ ก่อนหน้า</button>
+                <button type="button" class="tool-btn" id="mix-next-btn">ถัดไป ➔</button>
+              </div>
+            </div>
+
+            <div class="mix-wheel-layout">
+              <!-- Visual Rotating Dial -->
+              <div class="mix-wheel-wrapper">
+                <div class="mix-pointer"></div>
+                <div class="mix-wheel-dial" id="mix-wheel-dial"></div>
+                <div class="mix-wheel-center">
+                  <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">ลำดับผสม</span>
+                  <span style="font-size:1.6rem; font-weight:800; color:var(--primary);">WALES</span>
+                  <span style="font-size:0.72rem; color:var(--text-subtle);">แตะเลือกลำดับ</span>
+                </div>
+              </div>
+
+              <!-- Interactive Step Detail Card -->
+              <div id="mix-step-display"></div>
+            </div>
+
+            <!-- Clickable Step Pills -->
+            <div class="mix-step-selector-row">
+              <button type="button" class="mix-step-pill active" data-mix-step="1">1. น้ำสะอาด (50%)</button>
+              <button type="button" class="mix-step-pill" data-mix-step="2">2. ผง/เม็ด (WP/WDG)</button>
+              <button type="button" class="mix-step-pill" data-mix-step="3">3. สารแขวนลอย (SC/FL)</button>
+              <button type="button" class="mix-step-pill" data-mix-step="4">4. สารละลายแท้ (SL/SP)</button>
+              <button type="button" class="mix-step-pill" data-mix-step="5">5. สูตรน้ำมัน (EC/EW)</button>
+              <button type="button" class="mix-step-pill" data-mix-step="6">6. สารจับใบ & เติมน้ำ</button>
             </div>
           </div>
 
-          <div class="calc-grid" style="margin-bottom:12px;">
-            <div class="calc-input-group">
-              <label for="diary-crop-name">ชนิดพืช / แปลง:</label>
-              <input type="text" id="diary-crop-name" placeholder="เช่น ทุเรียน แปลงที่ 1">
+          <!-- Chemical Compatibility Checker -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title"><span>🧪</span> ตรวจสอบความเข้ากันได้ของการผสมสาร 2 ชนิด (Compatibility Checker)</h3>
+                <p class="card-subtitle">เลือกสาร 2 กลุ่มที่ต้องการผสมร่วมกัน เพื่อตรวจสอบว่าเกิดปฏิกิริยาตกตะกอนหรือเป็นพิษต่อพืชหรือไม่</p>
+              </div>
             </div>
-            <div class="calc-input-group">
-              <label for="diary-pest-name">ศัตรูพืชเป้าหมาย:</label>
-              <input type="text" id="diary-pest-name" placeholder="เช่น เพลี้ยไก่แจ้ หรือ รากเน่าโคนเน่า">
+
+            <div class="calc-grid" style="margin-bottom:14px;">
+              <div class="calc-input-group">
+                <label for="compat-chem-a">สารชนิดที่ 1:</label>
+                <select id="compat-chem-a">
+                  <option value="copper">สารกลุ่มคอปเปอร์ (ทองแดง)</option>
+                  <option value="sulfur">สารกลุ่มกำมะถัน (Sulfur)</option>
+                  <option value="calcium">ปุ๋ยแคลเซียม-โบรอน (ทางใบ)</option>
+                  <option value="phosphate">ปุ๋ยฟอสเฟต / แมกนีเซียมซัลเฟต</option>
+                  <option value="oil">ปิโตรเลียมออยล์ / ไวท์ออยล์</option>
+                  <option value="general_sc" selected>สารกำจัดแมลง/โรคทั่วไป (สูตร SC / WP)</option>
+                </select>
+              </div>
+
+              <div class="calc-input-group">
+                <label for="compat-chem-b">สารชนิดที่ 2 (ที่ต้องการผสมร่วม):</label>
+                <select id="compat-chem-b">
+                  <option value="copper">สารกลุ่มคอปเปอร์ (ทองแดง)</option>
+                  <option value="sulfur" selected>สารกลุ่มกำมะถัน (Sulfur)</option>
+                  <option value="calcium">ปุ๋ยแคลเซียม-โบรอน (ทางใบ)</option>
+                  <option value="phosphate">ปุ๋ยฟอสเฟต / แมกนีเซียมซัลเฟต</option>
+                  <option value="oil">ปิโตรเลียมออยล์ / ไวท์ออยล์</option>
+                  <option value="general_sc">สารกำจัดแมลง/โรคทั่วไป (สูตร SC / WP)</option>
+                </select>
+              </div>
             </div>
-            <div class="calc-input-group">
-              <label for="diary-group-code">กลุ่มสาร FRAC / IRAC ที่ใช้:</label>
-              <input type="text" id="diary-group-code" placeholder="เช่น IRAC 4A (อิมิดาโคลพริด)">
-            </div>
+
+            <button type="button" class="btn-primary" id="compat-check-btn" style="margin-bottom:16px;">
+              🔍 ตรวจสอบการผสมร่วม
+            </button>
+
+            <div id="compat-result-box"></div>
           </div>
+        </div>
 
-          <div class="calc-input-group" style="margin-bottom:14px;">
-            <label for="diary-notes">หมายเหตุเพิ่มเติม:</label>
-            <input type="text" id="diary-notes" placeholder="เช่น พ่นช่วงเช้า อัตรา 20 ซีซี สภาพอากาศแจ่มใส">
-          </div>
+        <!-- SUBTOOL 3: Rice Leaf Color Chart (LCC) Wheel -->
+        <div class="subtool-panel" id="subtool-lcc-wheel" style="display:none;">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title"><span>🌾</span> วงล้อตรวจสอบความเข้มสีใบข้าว (Leaf Color Chart - LCC)</h2>
+                <p class="card-subtitle">
+                  แผ่นเทียบสีใบข้าวมาตรฐาน IRRI & กรมการข้าว ช่วยประเมินความต้องการปุ๋ยไนโตรเจน (ยูเรีย 46-0-0) ป้องกันการใส่ปุ๋ยเกินจนเกิดโรคไหม้ข้าว
+                </p>
+              </div>
+            </div>
 
-          <button type="button" class="btn-primary" id="save-diary-btn">
-            💾 บันทึกประวัติการฉีดพ่น
-          </button>
+            <!-- Rice Growth Stage Filter -->
+            <div style="font-size:0.86rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">เลือกระยะการเจริญเติบโตของข้าว:</div>
+            <div class="tag-bar">
+              <button type="button" class="pill-tag active" data-rice-stage="tillering">🌱 ระยะแตกกอ (20-30 วัน)</button>
+              <button type="button" class="pill-tag" data-rice-stage="panicle">🌾 ระยะตั้งท้อง / กำเนิดช่อดอก (45-55 วัน)</button>
+              <button type="button" class="pill-tag" data-rice-stage="heading">🌾 ระยะออกรวง (Heading)</button>
+            </div>
 
-          <div style="margin-top:20px;">
-            <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:10px; color:var(--text-main);">
-              รายการที่บันทึกล่าสุดในเครื่องนี้:
-            </h4>
-            <div id="diary-entries-container"></div>
+            <!-- Color Swatches (5 Levels) -->
+            <div style="font-size:0.86rem; font-weight:700; color:var(--text-muted); margin-top:14px;">แตะเลือกแผ่นเฉดสีที่ใกล้เคียงกับใบข้าวในแปลง:</div>
+            <div class="lcc-swatches-grid" id="lcc-swatches-container"></div>
+
+            <!-- Interactive Range Slider -->
+            <div class="lcc-slider-wrap">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:0.84rem; font-weight:700; color:var(--text-muted);">หรือเลื่อนแถบสีเปรียบเทียบ (ระดับ 1 ถึง 5):</span>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:0.85rem; font-weight:800; color:var(--text-main);">สีปัจจุบัน:</span>
+                  <div id="lcc-preview-circle" style="width:26px; height:26px; border-radius:var(--radius-full); background:#6aa836; border:2px solid #fff; box-shadow:var(--shadow-sm); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; color:#222;">3</div>
+                </div>
+              </div>
+              <input type="range" min="1" max="5" value="3" step="1" class="lcc-range-slider" id="lcc-slider">
+            </div>
+
+            <!-- Diagnosis & Fertilizer Result -->
+            <div id="lcc-result-display"></div>
+
+            <!-- How to Measure Instructions -->
+            <div style="margin-top:18px; padding:16px; background:var(--bg-card-subtle); border-radius:var(--radius-md); border:1px solid var(--border-subtle); font-size:0.85rem; line-height:1.6; color:var(--text-muted);">
+              <b style="color:var(--text-main); display:block; margin-bottom:4px;">📖 วิธีการวัดสีใบข้าวในแปลงอย่างถูกต้อง:</b>
+              1. สุ่มตรวจต้นข้าวประมาณ 10-20 กอ กระจายทั่วแปลง (ไม่วัดเฉพาะริมคันนา)<br>
+              2. เลือก **"ใบยอดที่คลี่เต็มที่แล้ว" (The topmost fully expanded leaf)** โดยวัดที่บริเวณกึ่งกลางแผ่นใบ<br>
+              3. เวลาตรวจวัด: ช่วง **09:00 - 11:00 น.** หรือ **14:00 - 16:00 น.** โดยผู้ตรวจต้องหันหลังให้ดวงอาทิตย์ และใช้ร่มเงาของร่างกายบังแสงแดดตกกระทบใบข้าว เพื่อให้เห็นสีจริง<br>
+              4. หาค่าเฉลี่ยสีทั้งแปลง หากค่าเฉลี่ยต่ำกว่าระดับ 3 ให้ใส่ปุ๋ยไนโตรเจน หากระดับ 4 ขึ้นไป ให้ **"งดใส่ปุ๋ยไนโตรเจน"**
+            </div>
           </div>
         </div>
       </section>
@@ -478,12 +637,13 @@
 </div>
 
 <!-- Application Scripts -->
-<script src="js/data.js?v=2"></script>
-<script src="js/diagnosis.js?v=2"></script>
-<script src="js/nutrients.js?v=2"></script>
-<script src="js/moa.js?v=2"></script>
-<script src="js/calculator.js?v=2"></script>
-<script src="js/app.js?v=2"></script>
+<script src="js/data.js?v=4"></script>
+<script src="js/diagnosis.js?v=4"></script>
+<script src="js/nutrients.js?v=4"></script>
+<script src="js/moa.js?v=4"></script>
+<script src="js/calculator.js?v=4"></script>
+<script src="js/wheels.js?v=4"></script>
+<script src="js/app.js?v=4"></script>
 
 </body>
 </html>
