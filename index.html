@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="รู้ทันโรคพืช พลัส (Smart Plant Protection & Crop Health Dashboard) - ระบบวินิจฉัยโรคพืช ธาตุอาหาร และฐานข้อมูลกลุ่มกลไกการออกฤทธิ์ FRAC / IRAC">
+  <meta name="theme-color" content="#12633d">
+  <title>รู้ทันโรคพืช พลัส — Smart Plant Protection Dashboard</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,350;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Sidebar Navigation (Desktop & Mobile Drawer) -->
+  <aside class="sidebar" id="app-sidebar" aria-label="เมนูหลัก">
+    <div class="sidebar-header" style="justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="brand-icon">🌱</div>
+        <div class="brand-text">
+          <h1>รู้ทันโรคพืช พลัส</h1>
+          <span>Crop Health Dashboard</span>
+        </div>
+      </div>
+      <button type="button" id="sidebar-close-btn" class="mobile-menu-btn" style="border:none; font-size:1.4rem;" aria-label="ปิดเมนู">✕</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button type="button" class="nav-item active" data-target-view="overview-view">
+        <span class="nav-icon">📊</span>
+        <span>หน้าภาพรวม (Overview)</span>
+      </button>
+      <button type="button" class="nav-item" data-target-view="diagnosis-view">
+        <span class="nav-icon">🔍</span>
+        <span>วินิจฉัยโรคและศัตรูพืช</span>
+      </button>
+      <button type="button" class="nav-item" data-target-view="nutrients-view">
+        <span class="nav-icon">🌿</span>
+        <span>อาการขาดธาตุอาหาร</span>
+      </button>
+      <button type="button" class="nav-item" data-target-view="moa-view">
+        <span class="nav-icon">🧪</span>
+        <span>กลุ่มสาร FRAC / IRAC</span>
+      </button>
+      <button type="button" class="nav-item" data-target-view="toolbox-view">
+        <span class="nav-icon">🧮</span>
+        <span>คำนวณผสมสาร & บันทึก</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <b style="color:var(--text-main); display:block; margin-bottom:4px;">แหล่งอ้างอิงและเครือข่าย:</b>
+      <p style="margin-bottom:8px; font-size:0.78rem;">สำนักงานเกษตรอำเภอบางกระทุ่ม · กรมส่งเสริมการเกษตร · กรมวิชาการเกษตร</p>
+      <a href="https://www.facebook.com/plant.Bangkrathum" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:6px; font-size:0.8rem; font-weight:700; color:var(--info);">
+        <span>📘</span> เพจงานอารักขาพืชบางกระทุ่ม
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <!-- Main Wrapper -->
+  <div class="main-wrapper">
+    <!-- Top Header Bar -->
+    <header class="top-header">
+      <div class="header-left">
+        <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" aria-label="เปิดเมนู">
+          ☰
+        </button>
+        <div class="header-search">
+          <span class="header-search-icon">🔍</span>
+          <input type="search" id="global-search-input" placeholder="ค้นหาโรค, แมลง, สารเคมี, ธาตุอาหาร...">
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Accessibility Font Controls -->
+        <div style="display:flex; align-items:center; gap:4px; background:var(--bg-main); padding:3px 6px; border-radius:var(--radius-sm); border:1px solid var(--border-color);" title="ปรับขนาดตัวอักษร">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-right:2px;">ฟอนต์</span>
+          <button type="button" id="font-minus-btn" class="tool-btn" style="padding:4px 8px; font-size:0.8rem;" aria-label="ลดขนาดตัวอักษร">ก−</button>
+          <button type="button" id="font-plus-btn" class="tool-btn" style="padding:4px 8px; font-size:0.8rem;" aria-label="เพิ่มขนาดตัวอักษร">ก+</button>
+        </div>
+
+        <!-- Dark/Light Mode -->
+        <button type="button" id="theme-toggle-btn" class="tool-btn" aria-label="สลับโหมดแสงมืด">
+          🌙 โหมดมืด
+        </button>
+
+        <!-- Fullscreen -->
+        <button type="button" id="fullscreen-btn" class="tool-btn" aria-label="เต็มจอ">
+          ⛶ เต็มจอ
+        </button>
+
+        <!-- Print Pocket Guide -->
+        <button type="button" onclick="window.print()" class="tool-btn" title="พิมพ์คู่มือพกพา 1 หน้า">
+          🖨️ พิมพ์
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      
+      <!-- ================= VIEW 1: OVERVIEW ================= -->
+      <section class="view-section active" id="overview-view">
+        <div class="hero-banner">
+          <span class="hero-pill">ระบบผู้ช่วยเกษตรกรอัจฉริยะ 2026</span>
+          <h2>รู้ทันโรคพืช พลัส 🌱</h2>
+          <p>
+            แดชบอร์ดช่วยวินิจฉัยและสืบค้นข้อมูลโรคพืช แมลงศัตรูพืช อาการขาดธาตุอาหาร และคลังกลุ่มกลไกการออกฤทธิ์ FRAC & IRAC ครอบคลุมพืชเศรษฐกิจสำคัญ: ข้าว ข้าวโพด ทุเรียน ไม้ผล อ้อย มันสำปะหลัง และพืชผัก
+          </p>
+        </div>
+
+        <!-- KPI Summary Cards -->
+        <div class="stats-grid">
+          <div class="stat-card" onclick="App.navigateToView('diagnosis-view')">
+            <div class="stat-icon">🌾</div>
+            <div class="stat-info">
+              <h3 id="stat-pests-count">14</h3>
+              <p>ศัตรูพืชและโรคพืชที่บันทึก</p>
+            </div>
+          </div>
+
+          <div class="stat-card" onclick="App.navigateToView('nutrients-view')">
+            <div class="stat-icon">🌿</div>
+            <div class="stat-info">
+              <h3 id="stat-nutrients-count">13</h3>
+              <p>ธาตุอาหารพืช & อาการขาด</p>
+            </div>
+          </div>
+
+          <div class="stat-card" onclick="App.navigateToView('moa-view')">
+            <div class="stat-icon">🧪</div>
+            <div class="stat-info">
+              <h3 id="stat-moa-count">18</h3>
+              <p>กลุ่มกลไกสาร FRAC / IRAC</p>
+            </div>
+          </div>
+
+          <div class="stat-card" onclick="App.navigateToView('toolbox-view')">
+            <div class="stat-icon">🛡️</div>
+            <div class="stat-info">
+              <h3 style="color:var(--primary);">100%</h3>
+              <p>คำนวณผสมสาร & สลับกลุ่มดื้อยา</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seasonal Crop Alert Box -->
+        <div class="card" style="border-left:6px solid #e67e22; background:#fffcf7;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="font-weight:700; color:#b45309; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+              <span>⚠️</span> การเฝ้าระวังศัตรูพืชตามสภาพอากาศปัจจุบัน
+            </div>
+            <span class="pest-badge" style="background:#fef3c7; color:#92400e;">คำเตือนประจำฤดู</span>
+          </div>
+          <p style="font-size:0.9rem; color:#78350f; margin-top:8px; line-height:1.6;">
+            • <b>ทุเรียน & ไม้ผล:</b> ช่วงสภาพอากาศชื้น ฝนชุก ระวังเชื้อราไฟทอปธอรา (โรครากเน่าโคนเน่า) และโรคใบติด แนะนำตรวจโคนต้นสม่ำเสมอ<br>
+            • <b>ข้าว & ข้าวโพด:</b> เฝ้าระวังหนอนกระทู้ข้าวโพดลายจุดกัดกินยอด และโรคไหม้ข้าวในแปลงที่ใส่ปุ๋ยยูเรียสูง<br>
+            • <b>มันสำปะหลัง & อ้อย:</b> สำรวจแมลงหวี่ขาวยาสูบพาหะโรคใบด่างมันสำปะหลัง และเพลี้ยจักจั่นพาหะโรคใบขาวอ้อย
+          </p>
+        </div>
+
+        <!-- Quick Access Feature Cards -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px;">
+          <div class="card" style="cursor:pointer;" onclick="App.navigateToView('diagnosis-view')">
+            <div class="card-title"><span>🔍</span> ระบบวินิจฉัยศัตรูพืชและโรคพืช</div>
+            <p class="card-subtitle">ค้นหาตามชนิดพืชและอาการ ถ่ายรูปใบพืชเพื่อเทียบเคียง พร้อมแนวทางจัดการ IPM</p>
+            <div style="margin-top:14px; font-weight:700; color:var(--primary); font-size:0.88rem;">เปิดหน้าวินิจฉัย ➔</div>
+          </div>
+
+          <div class="card" style="cursor:pointer;" onclick="App.navigateToView('nutrients-view')">
+            <div class="card-title"><span>🌿</span> วินิจฉัยอาการขาดธาตุอาหารตามตำแหน่งใบ</div>
+            <p class="card-subtitle">แยกแยะระหว่างอาการใบล่าง (N, P, K, Mg) กับใบบน/ยอด (Fe, S, Ca, B) อย่างแม่นยำ</p>
+            <div style="margin-top:14px; font-weight:700; color:var(--primary); font-size:0.88rem;">เปิดหน้าธาตุอาหาร ➔</div>
+          </div>
+
+          <div class="card" style="cursor:pointer;" onclick="App.navigateToView('moa-view')">
+            <div class="card-title"><span>🧪</span> คลังกลุ่มสารเคมี FRAC / IRAC</div>
+            <p class="card-subtitle">ค้นหากลไกการออกฤทธิ์ทางชีวเคมี และเครื่องคำนวณการหมุนเวียนกลุ่มสารเพื่อป้องกันการดื้อยา</p>
+            <div style="margin-top:14px; font-weight:700; color:var(--primary); font-size:0.88rem;">เปิดคลังกลุ่มสาร ➔</div>
+          </div>
+
+          <div class="card" style="cursor:pointer;" onclick="App.navigateToView('toolbox-view')">
+            <div class="card-title"><span>🧮</span> เครื่องคำนวณตวงสาร & บันทึกการพ่น</div>
+            <p class="card-subtitle">คำนวณปริมาณสารเคมีต่อน้ำในถังพ่น (16L, 20L, 200L) พร้อมสมุดบันทึกประวัติป้องกันพ่นซ้ำ</p>
+            <div style="margin-top:14px; font-weight:700; color:var(--primary); font-size:0.88rem;">เปิดเครื่องคำนวณ ➔</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 2: DIAGNOSIS ================= -->
+      <section class="view-section" id="diagnosis-view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title"><span>🔍</span> ระบบวินิจฉัยโรคพืชและแมลงศัตรูพืช</h2>
+              <p class="card-subtitle">เลือกพืชเศรษฐกิจ ค้นหาอาการ หรืออัปโหลดภาพถ่ายเพื่อตรวจสอบแนวทางป้องกันกำจัด</p>
+            </div>
+            <span class="pest-badge" id="pest-count-display">พบ 14 รายการ</span>
+          </div>
+
+          <!-- Crop Filters -->
+          <div style="font-size:0.84rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">เลือกพืชเศรษฐกิจ:</div>
+          <div class="tag-bar">
+            <button type="button" class="pill-tag active" data-crop-filter="ทั้งหมด">🌾 ทุกพืช</button>
+            <button type="button" class="pill-tag" data-crop-filter="ข้าว">🌾 ข้าว</button>
+            <button type="button" class="pill-tag" data-crop-filter="ข้าวโพด">🌽 ข้าวโพด</button>
+            <button type="button" class="pill-tag" data-crop-filter="ทุเรียน">🌳 ทุเรียน</button>
+            <button type="button" class="pill-tag" data-crop-filter="อ้อย">🎋 อ้อย</button>
+            <button type="button" class="pill-tag" data-crop-filter="มันสำปะหลัง">🍠 มันสำปะหลัง</button>
+            <button type="button" class="pill-tag" data-crop-filter="ไม้ผล">🥭 ไม้ผล</button>
+            <button type="button" class="pill-tag" data-crop-filter="พืชผัก">🥬 พืชผัก</button>
+          </div>
+
+          <!-- Problem Type Filters -->
+          <div style="font-size:0.84rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">ประเภทปัญหา:</div>
+          <div class="tag-bar">
+            <button type="button" class="pill-tag active" data-type-filter="ทั้งหมด">ทั้งหมด</button>
+            <button type="button" class="pill-tag" data-type-filter="โรคพืช">🦠 โรคพืช (เชื้อรา/แบคทีเรีย/ไวรัส)</button>
+            <button type="button" class="pill-tag" data-type-filter="แมลงศัตรูพืช">🐛 แมลงศัตรูพืช</button>
+            <button type="button" class="pill-tag" data-type-filter="สัตว์ศัตรูพืช">🐌 สัตว์ศัตรูพืช</button>
+            <button type="button" class="pill-tag" data-type-filter="การจัดการ">🍃 การจัดการ & กายภาพ</button>
+          </div>
+
+          <!-- Search Input Bar -->
+          <div class="search-bar-inline">
+            <input type="search" id="pest-search-input" placeholder="พิมพ์ชื่อโรค ศัตรูพืช หรือลักษณะอาการ เช่น ใบจุด, เพลี้ย, รากเน่า, รวงหัก...">
+          </div>
+
+          <!-- Photo Upload & Camera Feature -->
+          <div class="photo-upload-box" onclick="document.getElementById('camera-file-input').click()">
+            <input type="file" id="camera-file-input" accept="image/*" capture="environment" style="display:none;">
+            <div style="font-size:2rem; margin-bottom:4px;">📷</div>
+            <b style="color:var(--primary); font-size:0.95rem;">แตะที่นี่เพื่อถ่ายภาพหรือเลือกรูปภาพใบพืชจากมือถือ</b>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">
+              ถ่ายภาพระยะใกล้ของแผลหรือแมลงเพื่อเทียบเคียงลักษณะอาการกับฐานข้อมูล
+            </p>
+          </div>
+          <div id="photo-preview-container"></div>
+        </div>
+
+        <!-- Pests Grid -->
+        <div class="pest-grid" id="pest-grid-container"></div>
+      </section>
+
+      <!-- ================= VIEW 3: NUTRIENTS ================= -->
+      <section class="view-section" id="nutrients-view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title"><span>🌿</span> อาการขาดธาตุอาหารพืช (Plant Nutrients)</h2>
+              <p class="card-subtitle">คัดกรองธาตุอาหารตามตำแหน่งใบ หรือใช้ตัวช่วยวินิจฉัยทีละขั้นตอน</p>
+            </div>
+            <button type="button" class="btn-primary" id="nutrient-wizard-btn">
+              🧙‍♂️ ผู้ช่วยวินิจฉัยทีละขั้น
+            </button>
+          </div>
+
+          <!-- Position Filters -->
+          <div class="tag-bar">
+            <button type="button" class="pill-tag active" data-nutrient-pos="all">ทุกตำแหน่งธาตุ</button>
+            <button type="button" class="pill-tag" data-nutrient-pos="lower">🍃 ใบล่าง (ใบแก่) — N, P, K, Mg, Mo</button>
+            <button type="button" class="pill-tag" data-nutrient-pos="upper">🌱 ใบบน (ใบอ่อน) — Fe, S, Zn, Mn, Cu</button>
+            <button type="button" class="pill-tag" data-nutrient-pos="bud">🌸 ยอด/ตาและผล — Ca, B</button>
+          </div>
+
+          <!-- Nutrient Symbol Grid -->
+          <div class="nutrient-card-grid" id="nutrient-buttons-container"></div>
+        </div>
+
+        <!-- Nutrient Detail Panel -->
+        <div id="nutrient-detail-container"></div>
+      </section>
+
+      <!-- ================= VIEW 4: MOA (FRAC & IRAC) ================= -->
+      <section class="view-section" id="moa-view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title"><span>🧪</span> ฐานข้อมูลกลุ่มกลไกการออกฤทธิ์ FRAC และ IRAC</h2>
+              <p class="card-subtitle">ค้นหากลุ่มสารเคมีปราบศัตรูพืชตามมาตรฐานสากล พร้อมระบบวางแผนสลับกลุ่มสารป้องกันการดื้อยา</p>
+            </div>
+            <span class="pest-badge" id="moa-count-display">พบ 18 กลุ่มสาร</span>
+          </div>
+
+          <!-- Filters & Search -->
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;">
+            <div class="tag-bar" style="margin:0;">
+              <button type="button" class="pill-tag active" data-moa-filter="ทั้งหมด">ทั้งหมด</button>
+              <button type="button" class="pill-tag" data-moa-filter="FRAC" style="border-color:#8e44ad; color:#8e44ad;">🟣 FRAC • โรคพืช</button>
+              <button type="button" class="pill-tag" data-moa-filter="IRAC" style="border-color:#d35400; color:#d35400;">🟠 IRAC • แมลงและไร</button>
+            </div>
+            <button type="button" class="tool-btn" id="moa-clear-btn" style="margin-left:auto;">ล้างตัวกรอง</button>
+          </div>
+
+          <div class="search-bar-inline">
+            <input type="search" id="moa-search-input" placeholder="ค้นหาด้วยรหัสกลุ่ม เช่น 11, 28, หรือชื่อสามัญ เช่น ไดฟีโนโคนาโซล, สไปนีโทแรม, อิมิดาโคลพริด...">
+          </div>
+
+          <!-- Interactive Resistance Rotation Helper -->
+          <div class="rotation-box">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <span style="font-size:1.3rem;">🔄</span>
+              <h4 style="font-weight:700; color:var(--text-main); font-size:1.05rem;">
+                เครื่องมือช่วยสลับกลุ่มสารเคมี (Resistance Rotation Helper)
+              </h4>
+            </div>
+            <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:12px;">
+              เลือกกลุ่มสารเคมีที่คุณเพิ่งใช้ฉีดพ่นในแปลงล่าสุด ระบบจะคำนวณและแสดงกลุ่มที่ "ห้ามใช้ซ้ำ" พร้อมแนะนำ "กลุ่มทางเลือกที่ปลอดภัย" ทันที
+            </p>
+
+            <div class="rotation-select-row">
+              <label for="rot-kind-select" style="font-size:0.88rem; font-weight:700;">ประเภทสาร:</label>
+              <select id="rot-kind-select">
+                <option value="FRAC">FRAC (สารกำจัดโรคพืช/เชื้อรา)</option>
+                <option value="IRAC">IRAC (สารกำจัดแมลงและไร)</option>
+              </select>
+
+              <label for="rot-code-select" style="font-size:0.88rem; font-weight:700;">กลุ่มที่เพิ่งฉีดพ่นล่าสุด:</label>
+              <select id="rot-code-select"></select>
+            </div>
+
+            <div class="rotation-result-grid" id="rotation-result-container"></div>
+          </div>
+        </div>
+
+        <!-- MoA Cards Grid -->
+        <div class="moa-grid" id="moa-grid-container"></div>
+
+        <!-- Standard Reference Footer -->
+        <div class="card" style="margin-top:20px; background:var(--bg-card-subtle); font-size:0.82rem; color:var(--text-muted);">
+          <b>มาตรฐานอ้างอิงระดับสากลและในประเทศ:</b><br>
+          • <a href="https://www.frac.info/media/s1zfrjqa/frac-code-list-2026.pdf" target="_blank" rel="noopener noreferrer">FRAC Code List 2026 (Fungicide Resistance Action Committee)</a><br>
+          • <a href="https://irac-online.org/mode-of-action/" target="_blank" rel="noopener noreferrer">IRAC MoA Classification Version 11.5 (ก.พ. 2026)</a><br>
+          • <a href="https://www.doa.go.th/ard/?page_id=386" target="_blank" rel="noopener noreferrer">กรมวิชาการเกษตร: ฐานข้อมูลวัตถุอันตรายทางการเกษตรที่ขึ้นทะเบียนในไทย</a><br>
+          <small>* ตรวจสอบฉลากและทะเบียนผลิตภัณฑ์ที่ได้รับอนุญาตในประเทศไทยล่าสุดทุกครั้งก่อนการใช้งานจริง</small>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 5: TOOLBOX ================= -->
+      <section class="view-section" id="toolbox-view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title"><span>🧮</span> เครื่องคำนวณอัตราผสมสารเคมี (Tank Mix Calculator)</h2>
+              <p class="card-subtitle">คำนวณปริมาณสารเคมี (ซีซีหรือกรัม) ที่ต้องตวงจริงให้ตรงกับขนาดถังพ่น</p>
+            </div>
+          </div>
+
+          <div class="calc-grid">
+            <div class="calc-input-group">
+              <label for="calc-tank-select">ขนาดถังฉีดพ่น:</label>
+              <select id="calc-tank-select">
+                <option value="20" selected>ถังโยก/แบตเตอรี่สะพายหลัง (20 ลิตร)</option>
+                <option value="16">เป้สะพายหลังขนาดเล็ก (16 ลิตร)</option>
+                <option value="200">ถังน้ำมัน 200 ลิตร (สายยางลาก)</option>
+                <option value="1000">ถังใหญ่/แอร์บัส/โดรนเกษตร (1,000 ลิตร)</option>
+                <option value="custom">กำหนดขนาดถังเอง (ลิตร)...</option>
+              </select>
+              <input type="number" id="calc-custom-tank" placeholder="ระบุขนาดถัง (ลิตร)" style="display:none; margin-top:6px;" value="20">
+            </div>
+
+            <div class="calc-input-group">
+              <label for="calc-dose-input">อัตราการใช้ข้างฉลาก (ต่อน้ำ 20 ลิตร):</label>
+              <input type="number" id="calc-dose-input" value="20" min="0.1" step="0.5">
+            </div>
+
+            <div class="calc-input-group">
+              <label for="calc-unit-select">หน่วยของสารเคมี:</label>
+              <select id="calc-unit-select">
+                <option value="ซีซี (มล.)">ซีซี หรือ มิลลิลิตร (มล.) — สารน้ำ</option>
+                <option value="กรัม">กรัม — สารผง / เม็ด</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Calculation Result Display -->
+          <div class="calc-result-banner">
+            <div style="font-size:0.95rem; opacity:0.9;">ปริมาณสารเคมีที่ต้องตวงใส่ถังพ่น:</div>
+            <div class="calc-result-number" id="calc-result-display">20</div>
+            <div style="font-size:1.1rem; font-weight:700;" id="calc-result-unit">ซีซี (มล.)</div>
+            <p style="font-size:0.86rem; margin-top:10px; opacity:0.88;" id="calc-area-estimate">
+              น้ำ 20 ลิตร ฉีดพ่นได้ประมาณ 0.3 ไร่ (คิดจากอัตราพ่นเฉลี่ย 60 ลิตร/ไร่)
+            </p>
+          </div>
+        </div>
+
+        <!-- Farm Spraying Diary Logger -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title"><span>📒</span> สมุดบันทึกประวัติการฉีดพ่นในแปลง (Spray Diary)</h3>
+              <p class="card-subtitle">บันทึกกลุ่มสารที่พ่นไปล่าสุด เพื่อติดตามรอบและป้องกันการใช้กลุ่มสารเดิมซ้ำ</p>
+            </div>
+          </div>
+
+          <div class="calc-grid" style="margin-bottom:12px;">
+            <div class="calc-input-group">
+              <label for="diary-crop-name">ชนิดพืช / แปลง:</label>
+              <input type="text" id="diary-crop-name" placeholder="เช่น ทุเรียน แปลงที่ 1">
+            </div>
+            <div class="calc-input-group">
+              <label for="diary-pest-name">ศัตรูพืชเป้าหมาย:</label>
+              <input type="text" id="diary-pest-name" placeholder="เช่น เพลี้ยไก่แจ้ หรือ รากเน่าโคนเน่า">
+            </div>
+            <div class="calc-input-group">
+              <label for="diary-group-code">กลุ่มสาร FRAC / IRAC ที่ใช้:</label>
+              <input type="text" id="diary-group-code" placeholder="เช่น IRAC 4A (อิมิดาโคลพริด)">
+            </div>
+          </div>
+
+          <div class="calc-input-group" style="margin-bottom:14px;">
+            <label for="diary-notes">หมายเหตุเพิ่มเติม:</label>
+            <input type="text" id="diary-notes" placeholder="เช่น พ่นช่วงเช้า อัตรา 20 ซีซี สภาพอากาศแจ่มใส">
+          </div>
+
+          <button type="button" class="btn-primary" id="save-diary-btn">
+            💾 บันทึกประวัติการฉีดพ่น
+          </button>
+
+          <div style="margin-top:20px;">
+            <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:10px; color:var(--text-main);">
+              รายการที่บันทึกล่าสุดในเครื่องนี้:
+            </h4>
+            <div id="diary-entries-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- App Visit Counter & Disclaimer -->
+      <footer style="margin-top:24px; padding:18px 0; border-top:1px solid var(--border-color); text-align:center; font-size:0.82rem; color:var(--text-muted);">
+        <p id="footer-visit-counter">ยินดีต้อนรับ</p>
+        <p style="margin-top:4px;">
+          ระบบนี้พัฒนาขึ้นเพื่อสนับสนุนการเรียนรู้และการคัดกรองเบื้องต้นของเกษตรกร ข้อมูลสารเคมีและอัตราใช้ให้ยึดตามฉลากผลิตภัณฑ์ที่ได้รับอนุญาตจากกรมวิชาการเกษตร
+        </p>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<!-- Mobile Bottom Navigation Bar -->
+<nav class="bottom-nav" aria-label="แถบนำทางมือถือ">
+  <div class="bottom-nav-list">
+    <button type="button" class="bottom-nav-item active" data-target-view="overview-view">
+      <span class="bottom-nav-icon">📊</span>
+      <span>ภาพรวม</span>
+    </button>
+    <button type="button" class="bottom-nav-item" data-target-view="diagnosis-view">
+      <span class="bottom-nav-icon">🔍</span>
+      <span>วินิจฉัย</span>
+    </button>
+    <button type="button" class="bottom-nav-item" data-target-view="nutrients-view">
+      <span class="bottom-nav-icon">🌿</span>
+      <span>ธาตุอาหาร</span>
+    </button>
+    <button type="button" class="bottom-nav-item" data-target-view="moa-view">
+      <span class="bottom-nav-icon">🧪</span>
+      <span>กลุ่มสาร</span>
+    </button>
+    <button type="button" class="bottom-nav-item" data-target-view="toolbox-view">
+      <span class="bottom-nav-icon">🧮</span>
+      <span>เครื่องมือ</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Global Modal Overlay -->
+<div class="modal-overlay" id="detail-modal" role="dialog" aria-modal="true">
+  <div class="modal-content" id="detail-modal-content"></div>
+</div>
+
+<!-- Application Scripts -->
+<script src="js/data.js?v=2"></script>
+<script src="js/diagnosis.js?v=2"></script>
+<script src="js/nutrients.js?v=2"></script>
+<script src="js/moa.js?v=2"></script>
+<script src="js/calculator.js?v=2"></script>
+<script src="js/app.js?v=2"></script>
+
+</body>
+</html>
